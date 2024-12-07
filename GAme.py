@@ -1,11 +1,18 @@
 from random import randrange
 
 colors = ["Red", "Green", "Blue", "Yellow"]
-arr=[]
+
+
+class Card():
+    def __init__(self,num,color):
+        self.number=num
+        self.color=color
+arr:list[Card]=[]
+        
 for color in colors:    
     for num in range(10):
-        arr.append(f"{num} {color}")
-        arr.append(f"{num} {color}")
+        arr.append(Card(num, color))
+        arr.append(Card(num, color))
 
 def shuffle_array(arr):
     for i in range(len(arr) -1,0,-1):   # Идем с конца массива
@@ -14,22 +21,21 @@ def shuffle_array(arr):
 
 shuffle_array(arr)
 
-num_players = int(input("Введите количество игроков: "))
-num_of_card = int(input("Введите количество карт на игрока: "))
+def check_card_compatibility(card_on_table:Card, players_card:Card):
+    if card_on_table.number == players_card.number or card_on_table.color == players_card.color:
+        return True
+    else:return False
 
-if num_players * num_of_card +1 <= len(arr):
-    card_on_table = arr.pop()                               #Карта на столе
+num_players = 3
+num_of_card = 6
+cards_on_table=[arr.pop()]
+players_hands=[]
+for i in range(num_players):
+    hand=[]
+    for _ in range(num_of_card):
+        hand.append(arr.pop())
+    players_hands.append(hand)
 
-    print("\nКарты на руках у игроков")
-    
-    for player_number in range(1,num_players+1):            #Номер игрока
-        hand=[]                                             #Карты каждого игрока
-        for _ in range(num_of_card):                        #Подчеркивание '_' используется вместо имени переменной, так как значение итерации не используется.
-            hand.append(arr.pop())                          #Добавление карты в руку
-        print(f"Игрок {player_number}: {', '.join(hand)}")
-
-    print(f"\nКарта на столе: {card_on_table}")
-
-else:print("В колоде недостаточно карт для игры!")
-
+print(cards_on_table[0].number,cards_on_table[0].color,players_hands[0][0].number, players_hands[0][0].color)
+print(check_card_compatibility(cards_on_table[0],players_hands[0][0]))
    
