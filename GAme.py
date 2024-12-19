@@ -24,7 +24,7 @@ shuffle_deck(deck)
 def check_card_compatibility(card_on_table:Card, players_card:Card):
     if card_on_table.number == players_card.number or card_on_table.color == players_card.color:
         return True
-    else:return False
+    return False
 
 num_players = 3
 num_of_card = 6
@@ -47,14 +47,23 @@ def add_card_to_player(num_player):
     global cards_on_table
     if len(deck) > 0:
         players_hands[num_player].append(deck.pop())
-        return True
     elif len(cards_on_table)>1:
         deck=cards_on_table[0:-1]
         cards_on_table=cards_on_table[-1:]
         shuffle_deck(deck)
         players_hands[num_player].append(deck.pop())
+
+current_player = 0
+
+def player_turn_interface():
+    pick=int(input())
+    if pick >= 0 and pick < len(players_hands[current_player]):
+        return players_turn(current_player,pick)
+    elif pick == -1:
+        add_card_to_player(current_player)
+        return False
+    else:
         return True
-    else:return False
 
 for i in range(100):
     print(add_card_to_player(0))
