@@ -7,6 +7,10 @@ class Card():
     def __init__(self,num,color):
         self.number=num
         self.color=color
+    def __str__(self):
+        return str(self.number)+ ' ' + self.color 
+    def __repr__(self):
+        return str(self.number)+ ' ' + self.color 
 deck:list[Card]=[]
         
 for color in colors:    
@@ -56,7 +60,12 @@ def add_card_to_player(num_player):
 current_player = 0
 
 def player_turn_interface():
-    pick=int(input())
+    print(f"Сейчас ходит: {current_player}")
+    for i in range(len(players_hands[current_player])):
+        print(f'[{i}] {players_hands[current_player][i]}')
+    print(f"Карта на столе: {cards_on_table[-1]}")
+    pick=int(input("Введите номер карты: "))
+    
     if pick >= 0 and pick < len(players_hands[current_player]):
         return players_turn(current_player,pick)
     elif pick == -1:
@@ -65,5 +74,10 @@ def player_turn_interface():
     else:
         return True
 
-for i in range(100):
-    print(add_card_to_player(0))
+game_finish=False
+while not game_finish:
+    if player_turn_interface():
+        current_player = (current_player+1) % num_players
+    for player in players_hands:
+        if len(player)==0:
+            game_finish=True
