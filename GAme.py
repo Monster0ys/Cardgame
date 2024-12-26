@@ -10,12 +10,12 @@ class Game():
     players:list[Player]=[]
     number_of_players:int=0
     cards_on_table:list[Card]=[]
-    def __init__(self,number_of_players:int):
-        self.number_of_players=number_of_players
+    def __init__(self,players_names:list[str]):
+        self.number_of_players=len(players_names)
         self.create_deck()
         self.shuffle_deck()
-        for i in range(number_of_players):
-            self.players.append(Player())
+        for i in players_names:
+            self.players.append(Player(i))
         for player in self.players:
             for i in range(self.CARDS_PER_PLAYER):
                 self.add_card_to_player(player)
@@ -37,12 +37,8 @@ class Game():
         self.deck+=self.cards_on_table[0:-1]
         self.cards_on_table=self.cards_on_table[-1:]
         self.shuffle_deck()
-    def check_card_compatibility(self, players_card:Card):
-        if self.get_card_from_table().number == players_card.number or self.get_card_from_table().color == players_card.color:
-            return True
-        return False
     def players_turn(self, player:Player,number_of_card:int):
-        if self.check_card_compatibility(player.hand[number_of_card]) and player==self.get_current_player():
+        if player.hand[number_of_card].can_be_put_on_card(self.get_card_from_table()) and player==self.get_current_player():
             self.cards_on_table.append(player.hand.pop(number_of_card))
             self.set_next_player()
     def get_current_player(self):
@@ -53,7 +49,6 @@ class Game():
         return self.cards_on_table[-1]
     def player_turn_interface(self):
         print("\033[2J\033[H", end="")
-        print(f'Player: {self.current_player}')
         print(self.get_current_player())
         print(f'Card on table: {self.get_card_from_table()}')
         pick=int(input("Enter card number: "))

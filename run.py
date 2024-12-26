@@ -1,3 +1,4 @@
 from Game import Game
-game=Game(3)
+players_names:list[str]=['Alex','Fred','Jack']
+game=Game(players_names)
 game.run()
