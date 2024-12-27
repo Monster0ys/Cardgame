@@ -15,7 +15,7 @@ class Game():
         self.create_deck()
         self.shuffle_deck()
         for i in players_names:
-            self.players.append(Player(i))
+            self.players.append(Player(i,self))
         for player in self.players:
             for i in range(self.CARDS_PER_PLAYER):
                 self.add_card_to_player(player)
@@ -47,21 +47,11 @@ class Game():
         self.current_player=(self.current_player+1) % self.number_of_players
     def get_card_from_table(self):
         return self.cards_on_table[-1]
-    def player_turn_interface(self):
-        print("\033[2J\033[H", end="")
-        print(self.get_current_player())
-        print(f'Card on table: {self.get_card_from_table()}')
-        pick=int(input("Enter card number: "))
-        if pick >= 0 and pick < len(self.get_current_player().hand):
-            self.players_turn(self.get_current_player(),pick)
-        elif pick == -1:
-            self.add_card_to_player(self.get_current_player())
-        else:
-            self.set_next_player()
     def run(self):
         game_finish=False
         while not game_finish:
-            self.player_turn_interface()
+            self.get_current_player().player_interface()
             for player in self.players:
                 if len(player.hand)==0:
+                    print(f"WIN: {player.name}")
                     game_finish=True

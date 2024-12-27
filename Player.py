@@ -1,10 +1,13 @@
+from __future__ import annotations
 from Card import Card
-
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from Game import Game
 class Player():
-    hand:list[Card]=[]
-    def __init__(self,name):
-        self.name=name
-        self.hand=[]
+    def __init__(self,name:str,game:Game):
+        self.name:str=name
+        self.hand:list[Card]=[]
+        self.game:Game=game
     def __str__(self):
         a=[]
         a.append(f'Player: {self.name}')
@@ -15,3 +18,16 @@ class Player():
         return self.__str__()
     def add_card(self,card:Card):
         self.hand.append(card)
+    def player_interface(self):
+        print("\033[2J\033[H", end="")
+        print(self)
+        print(f'Card on table: {self.game.get_card_from_table()}')
+        if self==self.game.get_current_player():
+            pick=int(input("Enter card number: "))
+            if pick >= 0 and pick < len(self.hand):
+                self.game.players_turn(self,pick)
+            elif pick == -1:
+                self.game.add_card_to_player(self)
+
+        
+        
