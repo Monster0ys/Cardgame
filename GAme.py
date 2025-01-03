@@ -1,16 +1,17 @@
 from Card import Card
 from Player import Player
 from random import randrange
+from card_methods import *
 
 class Game():
-    COLORS:list[str] = ["Red", "Green", "Blue", "Yellow"]
-    deck:list[Card]=[]
-    CARDS_PER_PLAYER:int = 6
-    current_player:int = 0
-    players:list[Player]=[]
-    number_of_players:int=0
-    cards_on_table:list[Card]=[]
     def __init__(self,players_names:list[str]):
+        self.COLORS:list[str] = ["Red", "Green", "Blue", "Yellow"]
+        self.deck:list[Card]=[]
+        self.CARDS_PER_PLAYER:int = 6
+        self.current_player:int = 0
+        self.players:list[Player]=[]
+        self.cards_on_table:list[Card]=[]
+        self.direction:int=1
         self.number_of_players=len(players_names)
         self.create_deck()
         self.shuffle_deck()
@@ -21,10 +22,12 @@ class Game():
                 self.add_card_to_player(player)
         self.cards_on_table=[self.deck.pop()]
     def create_deck(self):
-        for color in self.COLORS:    
+        for color in self.COLORS:
+            for _ in range(2):
+                self.deck.append(Card("reverse",color,reverse))
             for num in range(10):
-                self.deck.append(Card(num, color))
-                self.deck.append(Card(num, color))
+                for _ in range(2):
+                    self.deck.append(Card(num, color,do_nothing))
     def shuffle_deck(self):
         for i in range(len(self.deck)-1,0,-1):                      # Идем с конца массива
             j = randrange(i+1)                                      # Выбираем случайный индекс от 0 до i включительно
@@ -37,14 +40,17 @@ class Game():
         self.deck+=self.cards_on_table[0:-1]
         self.cards_on_table=self.cards_on_table[-1:]
         self.shuffle_deck()
-    def players_turn(self, player:Player,number_of_card:int):
-        if player.hand[number_of_card].can_be_put_on_card(self.get_card_from_table()) and player==self.get_current_player():
-            self.cards_on_table.append(player.hand.pop(number_of_card))
+    def players_turn(self, player:Player,card:Card)->bool:
+        if card.can_be_put_on_card(self.get_card_from_table()) and player==self.get_current_player():
+            self.cards_on_table.append(card)
+            card.function(self)
             self.set_next_player()
+            return True
+        return False
     def get_current_player(self):
         return self.players[self.current_player]
     def set_next_player(self):
-        self.current_player=(self.current_player+1) % self.number_of_players
+        self.current_player=(self.current_player+self.direction+self.number_of_players) % self.number_of_players
     def get_card_from_table(self):
         return self.cards_on_table[-1]
     def run(self):

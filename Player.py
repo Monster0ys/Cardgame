@@ -25,7 +25,8 @@ class Player():
         if self==self.game.get_current_player():
             pick=int(input("Enter card number: "))
             if pick >= 0 and pick < len(self.hand):
-                self.game.players_turn(self,pick)
+                if self.game.players_turn(self,self.hand[pick]):
+                    self.hand.pop(pick)
             elif pick == -1:
                 self.game.add_card_to_player(self)
 
