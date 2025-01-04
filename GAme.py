@@ -25,6 +25,10 @@ class Game():
         for color in self.COLORS:
             for _ in range(2):
                 self.deck.append(Card("reverse",color,reverse))
+            for _ in range(2):
+                self.deck.append(Card("skip",color,skip))
+            for _ in range(2):
+                self.deck.append(Card("+2",color,add_2_cards))
             for num in range(10):
                 for _ in range(2):
                     self.deck.append(Card(num, color,do_nothing))
