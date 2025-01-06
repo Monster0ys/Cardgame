@@ -9,11 +9,10 @@ class Player():
         self.hand:list[Card]=[]
         self.game:Game=game
     def __str__(self):
-        player_output=[]
-        player_output.append(f'Player: {self.name}')
+        player_output=[f'Player: {self.name}']
         for i in range(len(self.hand)):
             player_output.append(f'[{i}] {str(self.hand[i])}')
-            if self.hand[i].can_be_put_on_card(self.game.get_card_from_table()):
+            if self.hand[i].can_be_put_on_table():
                 player_output[-1]="\033[48;5;255m\033[38;5;0m"+player_output[-1]+"\033[0m"
         return '\n'.join(player_output)
     def __repr__(self):
@@ -31,6 +30,8 @@ class Player():
                     self.hand.pop(pick)
             elif pick == -1:
                 self.game.add_card_to_player(self)
+            else:
+                self.game.restrictions.penalty()
 
         
         

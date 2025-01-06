@@ -1,7 +1,8 @@
 from Card import Card
 from Player import Player
 from random import randrange
-from card_methods import *
+from Restrictions import Restrictions
+from card_methods import reverse,skip,add_2_cards,do_nothing,switch_color
 
 class Game():
     def __init__(self,players_names:list[str]):
@@ -15,23 +16,27 @@ class Game():
         self.number_of_players=len(players_names)
         self.create_deck()
         self.shuffle_deck()
+        self.restrictions=Restrictions(self)
         for i in players_names:
             self.players.append(Player(i,self))
         for player in self.players:
             for i in range(self.CARDS_PER_PLAYER):
                 self.add_card_to_player(player)
         self.cards_on_table=[self.deck.pop()]
+        self.restrictions.standard_update()
     def create_deck(self):
+        for _ in range(4):
+            self.deck.append(Card("switch","Black",switch_color,self))
         for color in self.COLORS:
             for _ in range(2):
-                self.deck.append(Card("reverse",color,reverse))
+                self.deck.append(Card("reverse",color,reverse,self))
             for _ in range(2):
-                self.deck.append(Card("skip",color,skip))
+                self.deck.append(Card("skip",color,skip,self))
             for _ in range(2):
-                self.deck.append(Card("+2",color,add_2_cards))
+                self.deck.append(Card("+2",color,add_2_cards,self))
             for num in range(10):
                 for _ in range(2):
-                    self.deck.append(Card(num, color,do_nothing))
+                    self.deck.append(Card(num, color,do_nothing,self))
     def shuffle_deck(self):
         for i in range(len(self.deck)-1,0,-1):                      # Идем с конца массива
             j = randrange(i+1)                                      # Выбираем случайный индекс от 0 до i включительно
@@ -45,8 +50,9 @@ class Game():
         self.cards_on_table=self.cards_on_table[-1:]
         self.shuffle_deck()
     def players_turn(self, player:Player,card:Card)->bool:
-        if card.can_be_put_on_card(self.get_card_from_table()) and player==self.get_current_player():
+        if card.can_be_put_on_table() and player==self.get_current_player():
             self.cards_on_table.append(card)
+            self.restrictions.standard_update()
             card.function(self)
             self.set_next_player()
             return True
