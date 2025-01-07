@@ -8,7 +8,13 @@ def reverse(game:Game):
 def do_nothing(game:Game):
     pass
 def skip(game:Game):
-    game.set_next_player()
+    game.restrictions.allowed_names=["skip"]
+    game.restrictions.allowed_colors=[]
+    def skip_penalty():
+        game.set_next_player()
+        game.restrictions.standard_update()
+    game.restrictions.penalty=skip_penalty
+    
 def add_2_cards(game:Game):
     game.set_next_player()
     for _ in range(2):
@@ -19,5 +25,5 @@ def switch_color(game:Game):
         for i in range(len(game.COLORS)):
             print(f"[{i}] {game.COLORS[i]}")
         pcolor=int(input("Enter color: "))
-    game.restrictions.allowed_colors=[game.COLORS[pcolor],'Black']
+    game.restrictions.allowed_colors=[game.COLORS[pcolor],game.BLACK]
     game.restrictions.allowed_names=[]

@@ -7,6 +7,7 @@ from card_methods import reverse,skip,add_2_cards,do_nothing,switch_color
 class Game():
     def __init__(self,players_names:list[str]):
         self.COLORS:list[str] = ["Red", "Green", "Blue", "Yellow"]
+        self.BLACK="Black"
         self.deck:list[Card]=[]
         self.CARDS_PER_PLAYER:int = 6
         self.current_player:int = 0
@@ -17,26 +18,29 @@ class Game():
         self.create_deck()
         self.shuffle_deck()
         self.restrictions=Restrictions(self)
-        for i in players_names:
-            self.players.append(Player(i,self))
+        for name in players_names:
+            self.players.append(Player(name,self))
         for player in self.players:
             for i in range(self.CARDS_PER_PLAYER):
                 self.add_card_to_player(player)
-        self.cards_on_table=[self.deck.pop()]
+        for i in range(len(self.deck)):
+            if self.deck[i].can_be_first:
+                self.cards_on_table=[self.deck[i]]
+                break
         self.restrictions.standard_update()
     def create_deck(self):
         for _ in range(4):
-            self.deck.append(Card("switch","Black",switch_color,self))
+            self.deck.append(Card(self,"switch",self.BLACK,switch_color))
         for color in self.COLORS:
             for _ in range(2):
-                self.deck.append(Card("reverse",color,reverse,self))
+                self.deck.append(Card(self,"reverse",color,reverse))
             for _ in range(2):
-                self.deck.append(Card("skip",color,skip,self))
+                self.deck.append(Card(self,"skip",color,skip))
             for _ in range(2):
-                self.deck.append(Card("+2",color,add_2_cards,self))
+                self.deck.append(Card(self,"+2",color,add_2_cards))
             for num in range(10):
                 for _ in range(2):
-                    self.deck.append(Card(num, color,do_nothing,self))
+                    self.deck.append(Card(self,num, color,do_nothing,True))
     def shuffle_deck(self):
         for i in range(len(self.deck)-1,0,-1):                      # Идем с конца массива
             j = randrange(i+1)                                      # Выбираем случайный индекс от 0 до i включительно

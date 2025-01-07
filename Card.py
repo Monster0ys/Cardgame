@@ -1,4 +1,5 @@
 from __future__ import annotations
+from card_methods import do_nothing
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from Game import Game
@@ -11,11 +12,12 @@ colors = {
 }
 
 class Card():
-    def __init__(self,name:str,color:str,function:callable,game:Game):
+    def __init__(self,game:Game=None,name:str="name",color:str="color",function:callable=do_nothing,can_be_first:bool=False):
         self.name:str=name
         self.color:str=color
         self.function:callable=function
         self.game:Game=game
+        self.can_be_first:bool=can_be_first
     def __str__(self):
         return f"{str(self.name)} {colors[self.color] if self.color in colors else ''}{self.color}{colors['END']}"
     def __repr__(self):

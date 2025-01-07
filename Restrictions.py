@@ -11,7 +11,7 @@ class Restrictions():
         self.penalty:callable=self.nothing
         self.game:Game=game
     def standard_update(self):
-        self.allowed_colors=[self.game.get_card_from_table().color,"Black"]
+        self.allowed_colors=[self.game.get_card_from_table().color,self.game.BLACK]
         self.allowed_names=[self.game.get_card_from_table().name]
         self.penalty=self.nothing
     def nothing(self):
