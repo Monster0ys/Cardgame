@@ -3,6 +3,7 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from Game import Game
 
+number_of_cards_must_be_taken=0
 def reverse(game:Game):
     game.direction*=-1
 def do_nothing(game:Game):
@@ -14,11 +15,23 @@ def skip(game:Game):
         game.set_next_player()
         game.restrictions.standard_update()
     game.restrictions.penalty=skip_penalty
+    game.restrictions.allow_to_take_card=False
     
 def add_2_cards(game:Game):
-    game.set_next_player()
-    for _ in range(2):
-        game.add_card_to_player(game.get_current_player())
+    game.restrictions.allowed_names=["+2"]
+    game.restrictions.allowed_colors=[]
+    global number_of_cards_must_be_taken
+    number_of_cards_must_be_taken+=2
+    def add_2_cards_penalty():
+        global number_of_cards_must_be_taken
+        for _ in range(number_of_cards_must_be_taken):
+            game.add_card_to_player(game.get_current_player())
+        game.set_next_player()
+        game.restrictions.standard_update()
+        number_of_cards_must_be_taken=0
+    game.restrictions.penalty=add_2_cards_penalty
+    game.restrictions.allow_to_take_card=False
+    
 def switch_color(game:Game):
     pcolor=-1
     while pcolor<0 or pcolor>=len(game.COLORS):

@@ -29,7 +29,8 @@ class Player():
                 if self.game.players_turn(self,self.hand[pick]):
                     self.hand.pop(pick)
             elif pick == -1:
-                self.game.add_card_to_player(self)
+                if self.game.restrictions.allow_to_take_card:
+                    self.game.add_card_to_player(self)
             else:
                 self.game.restrictions.penalty()
 
