@@ -2,7 +2,7 @@ from Card import Card
 from Player import Player
 from random import randrange
 from Restrictions import Restrictions
-from card_methods import reverse,skip,add_2_cards,do_nothing,switch_color
+from card_methods import reverse,skip,add_2_cards,do_nothing,switch_color,add_4_cards
 
 class Game():
     def __init__(self,players_names:list[str]):
@@ -31,6 +31,8 @@ class Game():
     def create_deck(self):
         for _ in range(4):
             self.deck.append(Card(self,"switch",self.BLACK,switch_color))
+        for _ in range(4):
+            self.deck.append(Card(self,"+4",self.BLACK,add_4_cards))
         for color in self.COLORS:
             for _ in range(2):
                 self.deck.append(Card(self,"reverse",color,reverse))
