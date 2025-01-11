@@ -25,7 +25,7 @@ class Game():
                 self.add_card_to_player(player)
         for i in range(len(self.deck)):
             if self.deck[i].can_be_first:
-                self.cards_on_table=[self.deck[i]]
+                self.cards_on_table=[self.deck.pop(i)]
                 break
         self.restrictions.update()
     def create_deck(self):
