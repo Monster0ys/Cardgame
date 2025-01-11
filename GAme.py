@@ -27,7 +27,7 @@ class Game():
             if self.deck[i].can_be_first:
                 self.cards_on_table=[self.deck[i]]
                 break
-        self.restrictions.standard_update()
+        self.restrictions.update()
     def create_deck(self):
         for _ in range(4):
             self.deck.append(Card(self,"switch",self.BLACK,switch_color))
@@ -58,7 +58,7 @@ class Game():
     def players_turn(self, player:Player,card:Card)->bool:
         if card.can_be_put_on_table() and player==self.get_current_player():
             self.cards_on_table.append(card)
-            self.restrictions.standard_update()
+            self.restrictions.update()
             card.function(self)
             self.set_next_player()
             return True
